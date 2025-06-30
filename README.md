@@ -1,7 +1,7 @@
 # RYOMEN's EVM Transaction Automator
 ## A professional-grade Node.js script for bulk automating EVM testnet transactions with advanced features, a clean interface, and Uniswap V3 compatibility.
 
-⭐ Core Features
+### ⭐ Core Features
 Multi-Action Engine: Automates Swaps, Add/Remove Liquidity, Wrap/Unwrap native tokens, and Token Sends.
 
 V3 DEX Compatible: Natively handles complex interactions for modern DEXs.
@@ -18,10 +18,11 @@ Telegram Watchdog Alerts: Get instant notifications for critical script failures
 
 Comprehensive Logging: Saves detailed transaction and error logs to files for easy review.
 
-🚀 Setup
+### 🚀 Setup
 Clone Repo:
 
-git clone <your-repo-url>
+'''bash
+git clone https://github.com/creepyzzzz/evm-transaction-bot
 cd <your-repo-folder>
 
 Install Dependencies:
