@@ -1,0 +1,67 @@
+{
+  "rpcUrls": {
+    "pharos": "https://testnet.dplabs-internal.com"
+  },
+  "dexes": {
+    "zenithFinance": {
+      "router": "0x1A4DE519154Ae51200b0Ad7c90F7faC75547888a",
+      "positionManager": "0xF8a1D4FF0f9b9Af7CE58E1fc1833688F3BFd6115"
+    },
+    "faroswap": {
+      "router": "0x3019B247381c850ab53Dc0EE53bCe7A07Ea9155f",
+      "positionManager": "0xf05Af5E9dC3b1dd3ad0C087BD80D7391283775e0"
+    }
+  },
+  "tokens": {
+    "pharos": {
+      "WPHRS": "0x76aaaDA469D23216bE5f7C596fA25F282Ff9b364",
+      "USDC": "0x72df0bcd7276f2dfbac900d1ce63c272c4bccced",
+      "USDT": "0xd4071393f8716661958f766df660033b3d35fd29"
+    }
+  },
+  "runConfig": {
+    "network": "pharos",
+    "dex": "zenithFinance",
+    "wallets": {
+      "selection": "round-robin"
+    },
+    "transactions": {
+      "count": 10,
+      "delaySeconds": { "min": 20, "max": 40 },
+      "types": ["swap", "liquidity", "send", "wrap", "unwrap"],
+      "retryCount": 2
+    },
+    "swap": {
+      "amountInPercent": { "min": 0.1, "max": 0.5 },
+      "validPairs": [
+        ["USDT", "WPHRS"],
+        ["USDC", "WPHRS"],
+        ["WPHRS", "USDT"],
+        ["WPHRS", "USDC"]
+      ]
+    },
+    "addLiquidity": {
+      "tokenA": "WPHRS",
+      "tokenB": "USDC",
+      "amountAPercent": { "min": 0.1, "max": 0.5 },
+      "amountBPercent": { "min": 0.1, "max": 0.5 }
+    },
+    "send": {
+      "token": "USDC",
+      "amountPercent": { "min": 0.1, "max": 0.2 }
+    },
+    "wrap": {
+        "amountPercent": { "min": 0.05, "max": 0.1 }
+    },
+    "dashboard": {
+        "displayBalances": ["PHRS", "WPHRS", "USDC", "USDT"]
+    }
+  },
+  "notifications": {
+    "telegram": {
+      "enabled": true,
+      "botToken": "YOUR_BOT_TOKEN",
+      "chatId": "YOUR_CHAT_ID"
+    }
+  }
+}
