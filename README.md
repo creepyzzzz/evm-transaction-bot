@@ -23,7 +23,8 @@ Clone Repo:
 
 '''bash
 git clone https://github.com/creepyzzzz/evm-transaction-bot
-cd <your-repo-folder>
+
+'''cd <your-repo-folder>
 
 Install Dependencies:
 
