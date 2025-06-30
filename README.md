@@ -86,19 +86,28 @@ pm2 start npm --name "ryomen-bot" -- run dev
 
 ## Manage the bot:
 
-pm2 logs ryomen-bot   # View live logs
-pm2 stop ryomen-bot    # Stop the bot
-pm2 restart ryomen-bot # Restart the bot
+ ### View live logs
+```
+pm2 logs ryomen-bot
+```
+  ### Stop the bot
+```  
+pm2 stop ryomen-bot
+```
+### Restart the bot
+```
+pm2 restart ryomen-bot
+```
 
 ## 🔔 Setup Telegram Alerts
 Create a Bot: Open Telegram, chat with @BotFather, and follow the instructions to get your Bot Token.
 
 Get Your Chat ID:
 
-Find your new bot on Telegram and send it a /start message.
+>Find your new bot on Telegram and send it a /start message.
 
-Visit this URL in your browser, replacing <YOUR_BOT_TOKEN> with your token: https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUpdates
+>Visit this URL in your browser, replacing <YOUR_BOT_TOKEN> with your token: https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUpdates
 
-Find "chat":{"id":...} in the response. That number is your chatId.
+>Find "chat":{"id":...} in the response. That number is your chatId.
 
-Update config.json: Add your token and ID to the notifications.telegram section and set enabled to true.
+>Update config.json: Add your token and ID to the notifications.telegram section and set enabled to true.
