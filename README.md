@@ -21,14 +21,19 @@ Comprehensive Logging: Saves detailed transaction and error logs to files for ea
 ## 🚀 Setup
 ### Clone Repo:
 
-''' bash
+``` bash
 git clone https://github.com/creepyzzzz/evm-transaction-bot
+```
 
-''' cd <your-repo-folder>
+```
+cd <your-repo-folder>
+```
 
 ### Install Dependencies:
 
+```
 npm install
+```
 
 ## ⚙️ Configuration
 .env file: Create this file in the main project folder and add your private keys (e.g., PRIVATE_KEY_1="0x..."). This file is git-ignored for security.
@@ -39,41 +44,53 @@ config.json file: This is the main control panel. Edit this file to set your RPC
 Run the Script
 To start the bot, run the following command in your terminal:
 
+```
 npm run dev
+```
 
-Command-Line Flags
+## Command-Line Flags
 Override your config.json settings for a single run using flags.
 
-Run on a specific DEX:
+### Run on a specific DEX:
 
+```
 npm run dev -- --dex faroSwap
+```
 
-Run a specific number of transactions:
+### Run a specific number of transactions:
 
+```
 npm run dev -- --txcount 50
+```
 
-Combine flags:
+### Combine flags:
 
+```
 npm run dev -- --dex zenithFinance --txcount 25
+```
 
-Running in the Background (on a Server)
+## Running in the Background (on a Server)
 To keep the script running after you disconnect from a server (e.g., via Termius), use a process manager like pm2.
 
-Install PM2:
+## Install PM2:
 
+```
 npm install pm2 -g
+```
 
-Start the bot with PM2:
+### Start the bot with PM2:
 
+```
 pm2 start npm --name "ryomen-bot" -- run dev
+```
 
-Manage the bot:
+## Manage the bot:
 
 pm2 logs ryomen-bot   # View live logs
 pm2 stop ryomen-bot    # Stop the bot
 pm2 restart ryomen-bot # Restart the bot
 
-🔔 Setup Telegram Alerts
+## 🔔 Setup Telegram Alerts
 Create a Bot: Open Telegram, chat with @BotFather, and follow the instructions to get your Bot Token.
 
 Get Your Chat ID:
