@@ -21,10 +21,10 @@ Comprehensive Logging: Saves detailed transaction and error logs to files for ea
 ### 🚀 Setup
 Clone Repo:
 
-'''bash
+''' bash
 git clone https://github.com/creepyzzzz/evm-transaction-bot
 
-'''cd <your-repo-folder>
+''' cd <your-repo-folder>
 
 Install Dependencies:
 
