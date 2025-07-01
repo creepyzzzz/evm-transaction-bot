@@ -15,9 +15,12 @@ async function approveToken(wallet: Wallet, tokenAddress: string, spenderAddress
     const tokenContract = new Contract(tokenAddress, ERC20_ABI, wallet);
     const allowance = await tokenContract.allowance(wallet.address, spenderAddress);
     if (allowance < amount) {
+        logger.info(`Approving token ${tokenAddress}...`);
         const tx = await tokenContract.approve(spenderAddress, ethers.MaxUint256);
         await tx.wait();
-        await sleep(5000);
+        logger.info(`Approval for ${tokenAddress} successful.`);
+        // --- ADDED: A hardcoded delay after every approval for stability ---
+        await sleep(5000); 
     }
 }
 
@@ -116,7 +119,6 @@ export async function executeAddLiquidity(wallet: Wallet, config: Config, provid
     await approveToken(wallet, tokenBAddress, dexConfig.positionManager, amountBDesired);
 
     const positionManagerContract = new Contract(dexConfig.positionManager, V3_POSITION_MANAGER_ABI, wallet);
-    // --- CORRECTED: Fixed the typo from amount0/1Desired to amountA/BDesired ---
     const mintParams = { token0: tokenAAddress, token1: tokenBAddress, fee: 500, tickLower: -887270, tickUpper: 887270, amount0Desired: amountADesired, amount1Desired: amountBDesired, amount0Min: 0, amount1Min: 0, recipient: wallet.address, deadline: Math.floor(Date.now() / 1000) + 60 * 20 };
     
     const feeData = await provider.getFeeData();
