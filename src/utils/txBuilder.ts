@@ -17,9 +17,9 @@ async function approveToken(wallet: Wallet, tokenAddress: string, spenderAddress
     if (allowance < amount) {
         logger.info(`Approving token ${tokenAddress}...`);
         const tx = await tokenContract.approve(spenderAddress, ethers.MaxUint256);
-        await tx.wait();
+        const receipt = await tx.wait();
+        if (!receipt) throw new Error(`Approval for ${tokenAddress} failed to get a receipt.`);
         logger.info(`Approval for ${tokenAddress} successful.`);
-        // --- ADDED: A hardcoded delay after every approval for stability ---
         await sleep(5000); 
     }
 }
@@ -39,6 +39,7 @@ export async function executeWrap(wallet: Wallet, config: Config, provider: Json
     
     const tx = await wphrsContract.deposit({ value: amountToWrap });
     const receipt = await tx.wait();
+    if (!receipt) throw new Error("Wrap transaction failed to be mined.");
     await logTransaction({ timestamp: new Date().toISOString(), wallet: wallet.address, type: 'Wrap', status: 'success', txHash: receipt.hash, details, gasUsed: receipt.gasUsed.toString() });
 }
 
@@ -57,6 +58,7 @@ export async function executeUnwrap(wallet: Wallet, config: Config, provider: Js
 
     const tx = await wphrsContract.withdraw(amountToUnwrap);
     const receipt = await tx.wait();
+    if (!receipt) throw new Error("Unwrap transaction failed to be mined.");
     await logTransaction({ timestamp: new Date().toISOString(), wallet: wallet.address, type: 'Unwrap', status: 'success', txHash: receipt.hash, details, gasUsed: receipt.gasUsed.toString() });
 }
 
@@ -92,6 +94,7 @@ export async function executeSwap(wallet: Wallet, config: Config, provider: Json
     const feeData = await provider.getFeeData();
     const tx = await routerContract.multicall(deadline, multicallData, { gasLimit: 1000000, maxFeePerGas: feeData.maxFeePerGas, maxPriorityFeePerGas: feeData.maxPriorityFeePerGas });
     const receipt = await tx.wait();
+    if (!receipt) throw new Error("Swap transaction failed to be mined.");
     await logTransaction({ timestamp: new Date().toISOString(), wallet: wallet.address, type: 'Swap', status: 'success', txHash: receipt.hash, details, gasUsed: receipt.gasUsed.toString() });
 }
 
@@ -124,12 +127,12 @@ export async function executeAddLiquidity(wallet: Wallet, config: Config, provid
     const feeData = await provider.getFeeData();
     const tx = await positionManagerContract.mint(mintParams, { gasLimit: 1000000, maxFeePerGas: feeData.maxFeePerGas, maxPriorityFeePerGas: feeData.maxPriorityFeePerGas });
     const receipt = await tx.wait();
+    if (!receipt) throw new Error("Add liquidity transaction failed to be mined.");
     await logTransaction({ timestamp: new Date().toISOString(), wallet: wallet.address, type: 'AddLiquidity', status: 'success', txHash: receipt.hash, details, gasUsed: receipt.gasUsed.toString() });
 }
 
 export async function executeSend(wallet: Wallet, config: Config, provider: JsonRpcProvider) {
-    const { runConfig, tokens } = config;
-    const tokenAddress = tokens[runConfig.network][runConfig.send.token];
+    const { runConfig } = config;
     
     let recipient: string | null = null;
     let attempts = 0;
@@ -146,16 +149,25 @@ export async function executeSend(wallet: Wallet, config: Config, provider: Json
     
     if (!recipient) throw new Error("Failed to find a valid recipient");
 
-    const tokenContract = new Contract(tokenAddress, ERC20_ABI, wallet);
-    const balance = await tokenContract.balanceOf(wallet.address);
-    const amount = (balance * BigInt(Math.floor(getRandomValue(runConfig.send.amountPercent.min, runConfig.send.amountPercent.max) * 100))) / 10000n;
-    if (amount === 0n) throw new Error("Calculated send amount is 0");
+    const balance = await provider.getBalance(wallet.address);
+    const amountToSend = (balance * BigInt(Math.floor(getRandomValue(runConfig.send.amountPercent.min, runConfig.send.amountPercent.max) * 100))) / 10000n;
+    
+    if (amountToSend === 0n) throw new Error("Calculated send amount is 0");
 
-    const details = `Send ${ethers.formatUnits(amount, await tokenContract.decimals())} ${runConfig.send.token} to ${recipient}`;
+    const details = `Send ${ethers.formatEther(amountToSend)} PHRS to ${recipient}`;
     await logTransaction({ timestamp: new Date().toISOString(), wallet: wallet.address, type: 'Send', status: 'pending', details });
 
-    const feeData = await provider.getFeeData();
-    const tx = await tokenContract.transfer(recipient, amount, {maxFeePerGas: feeData.maxFeePerGas, maxPriorityFeePerGas: feeData.maxPriorityFeePerGas});
+    const txRequest = {
+        to: recipient,
+        value: amountToSend
+    };
+
+    const tx = await wallet.sendTransaction(txRequest);
     const receipt = await tx.wait();
+    
+    if (!receipt) {
+        throw new Error("Send transaction failed to be mined and did not return a receipt.");
+    }
+
     await logTransaction({ timestamp: new Date().toISOString(), wallet: wallet.address, type: 'Send', status: 'success', txHash: receipt.hash, details, gasUsed: receipt.gasUsed.toString() });
 }
