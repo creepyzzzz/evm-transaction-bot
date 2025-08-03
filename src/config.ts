@@ -26,8 +26,8 @@ export interface RunConfig {
         amountAPercent: { min: number; max: number };
         amountBPercent: { min: number; max: number };
     };
+    // --- UPDATED: The 'token' property is no longer needed for 'send' ---
     send: {
-        token: string;
         amountPercent: { min: number; max: number };
     };
     wrap: {

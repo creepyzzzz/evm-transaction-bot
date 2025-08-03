@@ -21,13 +21,13 @@
   },
   "runConfig": {
     "network": "pharos",
-    "dex": "zenithFinance",
+    "dex": "faroswap",
     "wallets": {
       "selection": "round-robin"
     },
     "transactions": {
-      "count": 10,
-      "delaySeconds": { "min": 20, "max": 40 },
+      "count": 30,
+      "delaySeconds": { "min": 15, "max": 30 },
       "types": ["swap", "liquidity", "send", "wrap", "unwrap"],
       "retryCount": 2
     },
@@ -47,7 +47,7 @@
       "amountBPercent": { "min": 0.1, "max": 0.5 }
     },
     "send": {
-      "token": "USDC",
+  
       "amountPercent": { "min": 0.1, "max": 0.2 }
     },
     "wrap": {
@@ -59,7 +59,7 @@
   },
   "notifications": {
     "telegram": {
-      "enabled": true,
+      "enabled": false,
       "botToken": "YOUR_BOT_TOKEN",
       "chatId": "YOUR_CHAT_ID"
     }
